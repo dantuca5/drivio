@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="ro" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drivio – schițe ecrane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root, [data-theme="dark"] {
+  --bg:#121820; --surface:#1B2430; --surface2:#232E3C; --line:#2C3847;
+  --ink:#E9EEF4; --muted:#8A97A8; --brand:#3D7BFF; --brand-ink:#fff;
+  --go:#2BC48A; --slow:#F5B82E; --stop:#F0525A; --on-signal:#0E141B;
+  --desk:#0A0E13; --frame:#000;
+}
+[data-theme="light"] {
+  --bg:#EDF0F3; --surface:#FFFFFF; --surface2:#F4F6F8; --line:#DCE1E7;
+  --ink:#121820; --muted:#5B6878; --brand:#1F5BE0; --brand-ink:#fff;
+  --go:#12915F; --slow:#B07A00; --stop:#C9303A; --on-signal:#fff;
+  --desk:#D3D9E0; --frame:#1a1a1a;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--desk);color:var(--ink);font-family:Barlow,system-ui,sans-serif;font-size:16px;line-height:1.4;padding:24px 16px 48px;transition:background .3s}
+.num{font-family:"Barlow Semi Condensed",Barlow,sans-serif;font-variant-numeric:tabular-nums}
+header.page{max-width:1240px;margin:0 auto 24px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+header.page h1{font-size:28px;font-weight:700;letter-spacing:-.01em}
+header.page p{color:var(--muted);max-width:60ch}
+.toggle{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px}
+.toggle button{font:inherit;font-weight:600;font-size:14px;border:0;background:none;color:var(--muted);padding:8px 14px;border-radius:9px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink)}
+.stage{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px 32px;justify-content:center}
+figure{display:flex;flex-direction:column;gap:12px;align-items:center;width:min(390px,100%)}
+figcaption{color:var(--muted);font-size:14px;max-width:390px;text-align:center}
+figcaption b{color:var(--ink);font-weight:600}
+.phone{width:100%;height:844px;border-radius:52px;background:var(--frame);padding:10px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.screen{position:relative;height:100%;border-radius:44px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;transition:background .3s}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000;z-index:5}
+.status{height:54px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:6px 30px 0;font-weight:600;font-size:15px}
+.content{flex:1;overflow-y:auto;padding:8px 20px 20px;scrollbar-width:none}
+.content::-webkit-scrollbar{display:none}
+.tabbar{flex:none;margin:0 12px 22px;background:var(--surface);border:1px solid var(--line);border-radius:22px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;height:64px}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted)}
+.tab svg{width:22px;height:22px}
+.tab.on{color:var(--brand)}
+.tab.plus span{width:48px;height:48px;border-radius:16px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center}
+.tab.plus svg{width:26px;height:26px}
+h2.screen-title{font-size:28px;font-weight:700;letter-spacing:-.01em;margin:6px 0 14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:10px}
+.iconbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--ink)}
+.iconbtn svg{width:18px;height:18px}
+
+/* Acasă */
+.hero-label{color:var(--muted);font-size:15px;margin-top:18px}
+.hero-num{font-size:64px;font-weight:700;line-height:1;letter-spacing:-.02em;margin:4px 0 2px}
+.hero-num small{font-size:22px;font-weight:600;color:var(--muted);margin-left:4px}
+.road{position:relative;height:10px;border-radius:5px;background:var(--surface2);margin:16px 0 8px;overflow:hidden}
+.road i{position:absolute;inset:0 auto 0 0;background:var(--brand);border-radius:5px}
+.road::after{content:"";position:absolute;inset:4px 0 auto;height:2px;background:repeating-linear-gradient(90deg,transparent 0 10px,color-mix(in srgb,var(--ink) 25%,transparent) 10px 18px)}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.stats{margin-top:22px;border-top:1px solid var(--line)}
+.stats .line{display:grid;grid-template-columns:repeat(3,1fr);padding:12px 0;border-bottom:1px solid var(--line)}
+.stats .line div{display:flex;flex-direction:column}
+.stats .line span{font-size:12px;color:var(--muted)}
+.stats .line b{font-size:20px;font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:18px}
+.panel h3{font-size:15px;font-weight:600;margin-bottom:10px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.versus div{background:var(--surface2);border-radius:12px;padding:10px 12px}
+.versus b{font-size:22px;display:block}
+
+/* Cursă nouă */
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{font:inherit;font-weight:600;border:0;background:none;color:var(--muted);padding:10px;border-radius:10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.field{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column}
+.field.wide{grid-column:1/-1}
+.field label{font-size:12px;color:var(--muted)}
+.field input{font:600 22px "Barlow Semi Condensed",sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);background:none;border:0;outline:0;width:100%;padding:2px 0}
+.field:focus-within{border-color:var(--brand)}
+.field .unit{font-size:13px;color:var(--muted)}
+.more{display:flex;justify-content:space-between;align-items:center;color:var(--brand);font-weight:600;font-size:15px;padding:14px 2px 4px;cursor:pointer;user-select:none}
+.more-body{display:none}
+.more-body.open{display:grid}
+.verdict{margin-top:14px;border-radius:18px;padding:16px;color:var(--on-signal);transition:background .35s ease}
+.verdict[data-v="go"]{background:var(--go)}
+.verdict[data-v="slow"]{background:var(--slow)}
+.verdict[data-v="stop"]{background:var(--stop)}
+.verdict .word{font-size:22px;font-weight:700}
+.verdict .big{font-size:40px;font-weight:700;line-height:1}
+.verdict .big small{font-size:16px;font-weight:600;opacity:.8}
+.verdict .why{font-size:14px;font-weight:500;opacity:.9;margin-top:6px}
+.verdict .sub{display:flex;gap:16px;margin-top:10px;font-size:14px;font-weight:600}
+.details{margin-top:10px;font-size:14px}
+.details summary{color:var(--brand);font-weight:600;cursor:pointer;padding:6px 2px}
+.details dl{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:8px 2px}
+.details dt{color:var(--muted)}
+.details dd{text-align:right;font-family:"Barlow Semi Condensed";font-weight:600}
+.details dd.total{border-top:1px solid var(--line);padding-top:6px}
+.details dt.total{border-top:1px solid var(--line);padding-top:6px;color:var(--ink);font-weight:600}
+.actions{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:14px}
+.btn{font:inherit;font-weight:600;font-size:16px;height:52px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.toast{position:absolute;left:20px;right:20px;bottom:100px;background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;font-weight:600;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.toast u{color:var(--brand);text-decoration:none}
+
+/* Istoric */
+.search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--muted);margin:12px 0 10px}
+.search svg{width:18px;height:18px}
+.filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.filters .chip{white-space:nowrap}
+.filters .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.day{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-weight:600;margin:18px 0 6px}
+.ride{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.go{background:var(--go)}.dot.slow{background:var(--slow)}.dot.stop{background:var(--stop)}
+.ride .t{font-weight:600}
+.ride .m{font-size:13px;color:var(--muted)}
+.ride .p{text-align:right}
+.ride .p b{font-size:18px;display:block}
+.tag{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid var(--line);color:var(--muted);margin-right:6px}
+
+/* Unelte + Setări */
+.list{background:var(--surface);border:1px solid var(--line);border-radius:18px;margin-top:14px;overflow:hidden}
+.list .item{display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.list .item:last-child{border-bottom:0}
+.list .ico{width:36px;height:36px;border-radius:10px;background:var(--surface2);display:grid;place-items:center;color:var(--brand)}
+.list .ico svg{width:20px;height:20px}
+.list .item p{font-size:13px;color:var(--muted)}
+.list .item .v{color:var(--muted);font-size:15px}
+.group{font-size:13px;color:var(--muted);font-weight:600;margin:20px 4px -6px}
+.ev{margin-top:14px}
+.split{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:10px 0 6px}
+.split i:first-child{background:var(--brand)}
+.split i:last-child{background:color-mix(in srgb,var(--brand) 35%,var(--surface2))}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.mini .field input{font-size:18px}
+.result{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.result b{font-size:24px}
+.badge-warn{display:flex;gap:10px;align-items:center;background:color-mix(in srgb,var(--slow) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--slow) 40%,var(--line));border-radius:14px;padding:12px 14px;margin-top:14px;font-size:14px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:430px){.phone{height:780px;border-radius:40px;padding:6px}.screen{border-radius:34px}}
+</style>
+</head>
+<body>
+<header class="page">
+  <div>
+    <h1>Drivio · schițe pentru Etapa 2</h1>
+    <p>Cinci ecrane la dimensiunea iPhone 13 Pro. „Cursă nouă” calculează live cu formulele din arhitectură. Valorile vehiculului și pragurile sunt doar exemple.</p>
+  </div>
+  <div class="toggle" role="group" aria-label="Temă">
+    <button data-t="dark" aria-pressed="true">Întunecat</button>
+    <button data-t="light" aria-pressed="false">Luminos</button>
+  </div>
+</header>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17v2M19 17v2M3 13l2-6h14l2 6v4H3z"/><circle cx="7.5" cy="14" r=".5"/><circle cx="16.5" cy="14" r=".5"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 7h14M7 7l-3 7h6zM17 7l-3 7h6z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h7"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 5l12 7-12 7z"/></symbol>
+  <symbol id="i-pct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5zM3 8v8l9 5 9-5V8M12 13v8"/></symbol>
+</svg>
+
+<main class="stage">
+
+<!-- ACASĂ -->
+<figure>
+<div class="phone"><div class="screen">
+  <div class="island"></div>
+  <div class="status"><span>21:47</span><span>100%</span></div>
+  <div class="content">
+    <div class="row">
+      <span class="chip">Astăzi <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span>
+      <span class="iconbtn"><svg><use href="#i-moon"/></svg></span>
+    </div>
+    <p class="hero-label">Profit operațional estimat</p>
+    <p class="hero-num num">284,60<small>RON</small></p>
+    <div class="road"><i style="width:71%"></i></div>
+    <div class="row small"><span class="muted">71% din obiectivul zilnic</span><span class="num">400 RON</span></div>
+    <p class="note">Estimare operațională, nu profit contabil sau fiscal.</p>
+    <div class="stats">
+      <div class="line"><div><span>Venituri</span><b class="num">512,00</b></div><div><span>Comisioane</span><b class="num">118,40</b></div><div><span>Costuri mașină</span><b class="num">109,00</b></div></div>
+      <div class="line"><div><span>Curse</span><b class="num">14</b></div><div><span>Kilometri</span><b class="num">186</b></div><div><span>Ore</span><b class="num">7,4</b></div></div>
+      <div class="line"><div><span>Profit/cursă</span><b class="num">20,33</b></div><div><span>Profit/km</span><b class="num">1,53</b></div><div><span>Profit/oră</span><b class="num">38,46</b></div></div>
+    </div>
+    <div class="panel">
+      <h3>Ultimele 7 zile</h3>
+      <svg id="chart" viewBox="0 0 310 130" width="100%" role="img" aria-label="Venit, profit și cheltuieli pe ultimele 7 zile"></svg>
+      <div class="legend"><span><i style="background:var(--muted)"></i>Venit</span><span><i style="background:var(--brand)"></i>Profit</span><span><i style="background:var(--stop)"></i>Cheltuieli</span></div>
+    </div>
+    <div class="panel">
+      <h3>Uber vs Bolt · profit pe oră</h3>
+      <div class="versus"><div><span class="small muted">Uber</span><b class="num">36,10</b></div><div><span class="small muted">Bolt</span><b class="num">41,20</b></div></div>
+    </div>
+    <div class="panel">
+      <h3>Încărcare: estimat vs plătit</h3>
+      <div class="row"><span class="muted">Estimat din curse</span><b class="num">62,00 RON</b></div>
+      <div class="row" style="margin-top:4px"><span class="muted">Plătit (bonuri)</span><b class="num">70,00 RON</b></div>
+      <p class="small muted" style="margin-top:8px">Ai plătit cu 13% mai mult decât estimarea. Verifică consumul din setările vehiculului.</p>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab on"><svg><use href="#i-home"/></svg>Acasă</span>
+    <span class="tab"><svg><use href="#i-list"/></svg>Istoric</span>
+    <span class="tab plus"><span><svg><use href="#i-plus"/></svg></span></span>
+    <span class="tab"><svg><use href="#i-tools"/></svg>Unelte</span>
+    <span class="tab"><svg><use href="#i-gear"/></svg>Setări</span>
+  </nav>
+</div></div>
+<figcaption><b>Acasă.</b> Profitul zilei și progresul spre obiectiv primele; restul indicatorilor sub ele, apoi grafic și comparații.</figcaption>
+</figure>
+
+<!-- CURSĂ NOUĂ -->
+<figure>
+<div class="phone"><div class="screen">
+  <div class="island"></div>
+  <div class="status"><span>21:48</span><span>100%</span></div>
+  <div class="content">
+    <div class="row"><h2 class="screen-title" style="margin:0">Cursă nouă</h2><span class="chip"><svg width="16" height="16"><use href="#i-car"/></svg>Tesla M3</span></div>
+    <div class="seg" style="margin-top:14px" role="group" aria-label="Platformă">
+      <button data-p="uber" aria-pressed="false">Uber</button>
+      <button data-p="bolt" aria-pressed="true">Bolt</button>
+    </div>
+    <div class="fields">
+      <div class="field wide"><label for="fare">Sumă cursă (brut)</label><div class="row"><input id="fare" inputmode="decimal" value="35,00"><span class="unit">RON</span></div></div>
+      <div class="field"><label for="km">Km cu client</label><input id="km" inputmode="decimal" value="10"></div>
+      <div class="field"><label for="min">Minute cursă</label><input id="min" inputmode="decimal" value="20"></div>
+      <div class="field"><label for="pkm">Km până la client</label><input id="pkm" inputmode="decimal" value="2"></div>
+      <div class="field"><label for="pmin">Minute preluare</label><input id="pmin" inputmode="decimal" value="5"></div>
+    </div>
+    <div class="more" id="moreToggle" role="button" aria-expanded="false" tabindex="0"><span>Mai mult: așteptare, bacșiș, bonus</span><span id="moreArrow">＋</span></div>
+    <div class="fields more-body" id="moreBody">
+      <div class="field"><label for="wait">Minute așteptare</label><input id="wait" inputmode="decimal" value="2"></div>
+      <div class="field"><label for="tip">Bacșiș (RON)</label><input id="tip" inputmode="decimal" value="0"></div>
+      <div class="field"><label for="bonus">Bonus (RON)</label><input id="bonus" inputmode="decimal" value="0"></div>
+      <div class="field"><label for="comm">Comision %</label><input id="comm" inputmode="decimal" value="25"></div>
+    </div>
+    <div class="verdict" id="verdict" data-v="go" aria-live="polite">
+      <div class="row"><span class="word" id="vWord">Merită</span><span class="big num" id="vHour">41,50<small> RON/oră</small></span></div>
+      <p class="why" id="vWhy">Peste pragurile de 40 RON/oră și 1,40 RON/km.</p>
+      <div class="sub num"><span id="vProfit">Profit 18,68</span><span id="vKm">1,56 RON/km</span><span id="vYield">53%</span></div>
+    </div>
+    <details class="details">
+      <summary>Detalii calcul</summary>
+      <dl id="dl"></dl>
+    </details>
+    <div class="actions">
+      <button class="btn" id="simBtn">Doar simulez</button>
+      <button class="btn primary" id="saveBtn">Salvează cursa</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"><span>Cursă salvată</span><u>Anulează</u></div>
+  <nav class="tabbar">
+    <span class="tab"><svg><use href="#i-home"/></svg>Acasă</span>
+    <span class="tab"><svg><use href="#i-list"/></svg>Istoric</span>
+    <span class="tab plus"><span><svg><use href="#i-plus"/></svg></span></span>
+    <span class="tab"><svg><use href="#i-tools"/></svg>Unelte</span>
+    <span class="tab"><svg><use href="#i-gear"/></svg>Setări</span>
+  </nav>
+</div></div>
+<figcaption><b>Cursă nouă — funcțională.</b> Schimbă suma sau km și urmărește verdictul. Încearcă 15 RON cu 4 km până la client.</figcaption>
+</figure>
+
+<!-- ISTORIC -->
+<figure>
+<div class="phone"><div class="screen">
+  <div class="island"></div>
+  <div class="status"><span>21:50</span><span>100%</span></div>
+  <div class="content">
+    <h2 class="screen-title">Istoric</h2>
+    <div class="seg" role="group" aria-label="Tip"><button aria-pressed="true">Curse</button><button aria-pressed="false">Cheltuieli</button></div>
+    <div class="search"><svg><use href="#i-search"/></svg>Caută după notă, sumă sau dată</div>
+    <div class="filters"><span class="chip on">Toate</span><span class="chip">Uber</span><span class="chip">Bolt</span><span class="chip">Nu merită</span><span class="chip">Cele mai bune 10</span><span class="chip">Cele mai slabe 10</span></div>
+    <div class="day"><span>Azi, joi 19 noiembrie</span><span class="num">284,60 RON</span></div>
+    <div id="rides"></div>
+    <div class="day"><span>Ieri, miercuri 18 noiembrie</span><span class="num">312,15 RON</span></div>
+    <div id="rides2"></div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab"><svg><use href="#i-home"/></svg>Acasă</span>
+    <span class="tab on"><svg><use href="#i-list"/></svg>Istoric</span>
+    <span class="tab plus"><span><svg><use href="#i-plus"/></svg></span></span>
+    <span class="tab"><svg><use href="#i-tools"/></svg>Unelte</span>
+    <span class="tab"><svg><use href="#i-gear"/></svg>Setări</span>
+  </nav>
+</div></div>
+<figcaption><b>Istoric.</b> Grupat pe zile, cu totalul zilei. Glisezi un rând pentru ștergere, îl atingi pentru detalii și editare.</figcaption>
+</figure>
+
+<!-- UNELTE -->
+<figure>
+<div class="phone"><div class="screen">
+  <div class="island"></div>
+  <div class="status"><span>21:51</span><span>100%</span></div>
+  <div class="content">
+    <h2 class="screen-title">Unelte</h2>
+    <div class="list">
+      <div class="item"><span class="ico"><svg><use href="#i-play"/></svg></span><div><b>Simulează o cursă</b><p>Verifică o ofertă înainte s-o accepți</p></div><span class="v">›</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-scale"/></svg></span><div><b>Compară două curse</b><p>Care aduce mai mult pe oră și pe km</p></div><span class="v">›</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-route"/></svg></span><div><b>Tarif minim pe km</b><p>Sub ce sumă pe km nu merită</p></div><span class="v">›</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-clock"/></svg></span><div><b>Tarif minim pe oră</b><p>Cât trebuie să încasezi pe oră</p></div><span class="v">›</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-pct"/></svg></span><div><b>Uber vs Bolt</b><p>Comparație pe perioada aleasă</p></div><span class="v">›</span></div>
+    </div>
+    <div class="panel">
+      <h3>Tarif minim pe km</h3>
+      <div class="mini">
+        <div class="field"><label for="want">Profit dorit/oră</label><input id="want" inputmode="decimal" value="40"></div>
+        <div class="field"><label for="speed">Viteză medie km/h</label><input id="speed" inputmode="decimal" value="25"></div>
+        <div class="field"><label for="dead">Km fără client %</label><input id="dead" inputmode="decimal" value="20"></div>
+        <div class="field"><label for="mcomm">Comision %</label><input id="mcomm" inputmode="decimal" value="25"></div>
+      </div>
+      <div class="result"><span class="muted">Acceptă curse de la</span><b class="num" id="minKm">—</b></div>
+      <p class="small muted" style="margin-top:6px">Calcul bazat pe costul vehiculului activ: <span class="num" id="costKm"></span>. Formula finală se validează prin teste în Etapa 3.</p>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab"><svg><use href="#i-home"/></svg>Acasă</span>
+    <span class="tab"><svg><use href="#i-list"/></svg>Istoric</span>
+    <span class="tab plus"><span><svg><use href="#i-plus"/></svg></span></span>
+    <span class="tab on"><svg><use href="#i-tools"/></svg>Unelte</span>
+    <span class="tab"><svg><use href="#i-gear"/></svg>Setări</span>
+  </nav>
+</div></div>
+<figcaption><b>Unelte.</b> Calculatoarele care te ajută să decizi. Tariful minim pe km se actualizează live.</figcaption>
+</figure>
+
+<!-- SETĂRI / VEHICUL EV -->
+<figure>
+<div class="phone"><div class="screen">
+  <div class="island"></div>
+  <div class="status"><span>21:52</span><span>100%</span></div>
+  <div class="content">
+    <h2 class="screen-title">Setări</h2>
+    <div class="panel ev" style="margin-top:0">
+      <div class="row"><h3 style="margin:0">Tesla Model 3 · electric</h3><span class="small muted">activ</span></div>
+      <div class="mini">
+        <div class="field"><label for="cons">Consum kWh/100 km</label><input id="cons" inputmode="decimal" value="17"></div>
+        <div class="field"><label for="loss">Pierderi încărcare %</label><input id="loss" inputmode="decimal" value="0"></div>
+        <div class="field"><label for="ph">Acasă RON/kWh</label><input id="ph" inputmode="decimal" value="1,00"></div>
+        <div class="field"><label for="pp">Stații publice RON/kWh</label><input id="pp" inputmode="decimal" value="2,20"></div>
+      </div>
+      <div class="row small" style="margin-top:14px"><span>Acasă <b class="num" id="homePct">70%</b></span><span>Public <b class="num" id="pubPct">30%</b></span></div>
+      <div class="split" aria-hidden="true"><i id="splitHome" style="width:70%"></i><i style="flex:1"></i></div>
+      <input type="range" id="share" min="0" max="100" value="70" aria-label="Procent încărcare acasă">
+      <div class="result"><span class="muted">Preț mediu · energie pe km</span><b class="num" id="evOut">—</b></div>
+    </div>
+    <p class="group">Financiar</p>
+    <div class="list">
+      <div class="item"><span class="ico"><svg><use href="#i-pct"/></svg></span><div><b>Comisioane</b><p>Uber și Bolt</p></div><span class="v num">25% · 25%</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-flag"/></svg></span><div><b>Praguri verdict</b><p>Când o cursă e verde, galbenă, roșie</p></div><span class="v">›</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-route"/></svg></span><div><b>Obiective</b><p>Zilnic 400 · lunar 8.000 RON</p></div><span class="v">›</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-car"/></svg></span><div><b>Costuri fixe lunare</b><p>RCA, leasing, licență, telefon</p></div><span class="v">›</span></div>
+    </div>
+    <p class="group">Date</p>
+    <div class="list">
+      <div class="item"><span class="ico"><svg><use href="#i-box"/></svg></span><div><b>Backup și restaurare</b><p>Ultimul backup: acum 3 zile</p></div><span class="v">›</span></div>
+      <div class="item"><span class="ico"><svg><use href="#i-list"/></svg></span><div><b>Export CSV / PDF</b><p>Alegi perioada</p></div><span class="v">›</span></div>
+    </div>
+    <div class="badge-warn"><b>!</b><span>Fă un backup săptămânal. iOS poate șterge, rar, datele aplicațiilor web.</span></div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab"><svg><use href="#i-home"/></svg>Acasă</span>
+    <span class="tab"><svg><use href="#i-list"/></svg>Istoric</span>
+    <span class="tab plus"><span><svg><use href="#i-plus"/></svg></span></span>
+    <span class="tab"><svg><use href="#i-tools"/></svg>Unelte</span>
+    <span class="tab on"><svg><use href="#i-gear"/></svg>Setări</span>
+  </nav>
+</div></div>
+<figcaption><b>Setări.</b> Calculatorul EV: glisorul împarte încărcarea între acasă și stații publice, prețul mediu se recalculează live.</figcaption>
+</figure>
+
+</main>
+
+<script>
+// Valori de EXEMPLU, doar pentru schiță. În aplicație vin exclusiv din setările utilizatorului.
+const EX = { cons:17, loss:0, home:1.00, pub:2.20, share:70, wearPerKm:0.40,
+  th:{ redHour:30, greenHour:40, redKm:1.0, greenKm:1.4 } };
+
+const $ = id => document.getElementById(id);
+const num = v => { const n = parseFloat(String(v).replace(/\s/g,'').replace(',','.')); return isFinite(n) ? n : 0; };
+const fmt = (n, d=2) => isFinite(n) ? n.toLocaleString('ro-RO',{minimumFractionDigits:d,maximumFractionDigits:d}) : '—';
+
+function energyPerKm(){
+  const s = EX.share/100;
+  const avg = s*EX.home + (1-s)*EX.pub;
+  return { avg, perKm: EX.cons/100*avg/(1-EX.loss/100) };
+}
+
+function calcRide(){
+  const c = Math.min(num($('comm').value), 99.9)/100;
+  const fare = num($('fare').value), tip = num($('tip').value), bonus = num($('bonus').value);
+  const km = num($('km').value) + num($('pkm').value);
+  const minT = num($('min').value) + num($('pmin').value) + num($('wait').value);
+  const comm = fare*c;
+  const income = fare + tip + bonus;
+  const energy = km*energyPerKm().perKm;
+  const wear = km*EX.wearPerKm;
+  const carCost = energy + wear;
+  const profit = income - comm - carCost;
+  const perKm = km>0 ? profit/km : NaN;
+  const perHour = minT>0 ? profit/(minT/60) : NaN;
+  const yieldPct = income>0 ? profit/income*100 : NaN;
+  return {fare,comm,income,afterComm:income-comm,energy,wear,carCost,total:comm+carCost,profit,perKm,perHour,realKm:km>0?carCost/km:NaN,yieldPct,km,minT};
+}
+
+function verdict(r){
+  const t = EX.th;
+  if (r.profit <= 0) return ['stop','Nu merită','Pierzi bani pe această cursă.'];
+  if (r.perHour < t.redHour) return ['stop','Nu merită',`Sub ${t.redHour} RON/oră.`];
+  if (r.perKm < t.redKm) return ['stop','Nu merită',`Sub ${fmt(t.redKm)} RON/km.`];
+  if (r.perHour >= t.greenHour && r.perKm >= t.greenKm) return ['go','Merită',`Peste pragurile de ${t.greenHour} RON/oră și ${fmt(t.greenKm)} RON/km.`];
+  const miss = r.perHour < t.greenHour ? `${t.greenHour} RON/oră` : `${fmt(t.greenKm)} RON/km`;
+  return ['slow','La limită',`Profitabilă, dar sub ținta de ${miss}.`];
+}
+
+function renderRide(){
+  const r = calcRide(); const [v,word,why] = verdict(r);
+  $('verdict').dataset.v = v; $('vWord').textContent = word; $('vWhy').textContent = why;
+  $('vHour').innerHTML = `${fmt(r.perHour)}<small> RON/oră</small>`;
+  $('vProfit').textContent = `Profit ${fmt(r.profit)}`;
+  $('vKm').textContent = `${fmt(r.perKm)} RON/km`;
+  $('vYield').textContent = isFinite(r.yieldPct) ? `${fmt(r.yieldPct,0)}%` : '—';
+  const rows = [
+    ['Venit brut', r.income], ['Comision', -r.comm], ['Venit după comision', r.afterComm],
+    [`Energie (${fmt(r.km,1)} km)`, -r.energy], ['Uzură și mentenanță', -r.wear],
+    ['Cost total cursă', r.total], ['Profit operațional estimat', r.profit, true],
+    ['Profit pe km', r.perKm], ['Profit pe oră', r.perHour], ['Cost real pe km', r.realKm]];
+  $('dl').innerHTML = rows.map(([k,val,tot]) => `<dt class="${tot?'total':''}">${k}</dt><dd class="${tot?'total':''}">${fmt(val)}</dd>`).join('') +
+    `<dt>Randament</dt><dd>${isFinite(r.yieldPct)?fmt(r.yieldPct,1)+'%':'—'}</dd>`;
+}
+
+['fare','km','min','pkm','pmin','wait','tip','bonus','comm'].forEach(id => $(id).addEventListener('input', renderRide));
+document.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('[data-p]').forEach(x => x.setAttribute('aria-pressed', x===b));
+}));
+const toggleMore = () => { const o = $('moreBody').classList.toggle('open'); $('moreToggle').setAttribute('aria-expanded', o); $('moreArrow').textContent = o?'－':'＋'; };
+$('moreToggle').addEventListener('click', toggleMore);
+$('moreToggle').addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); toggleMore(); } });
+let tt; $('saveBtn').addEventListener('click', () => { $('toast').classList.add('show'); clearTimeout(tt); tt = setTimeout(()=>$('toast').classList.remove('show'), 2500); });
+$('simBtn').addEventListener('click', () => $('verdict').animate([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:260}));
+
+// EV
+function renderEV(){
+  EX.cons = num($('cons').value); EX.loss = Math.min(num($('loss').value), 50);
+  EX.home = num($('ph').value); EX.pub = num($('pp').value); EX.share = +$('share').value;
+  $('homePct').textContent = EX.share+'%'; $('pubPct').textContent = (100-EX.share)+'%'; $('splitHome').style.width = EX.share+'%';
+  const e = energyPerKm();
+  $('evOut').textContent = `${fmt(e.avg)} · ${fmt(e.perKm,3)} RON`;
+  renderRide(); renderMin();
+}
+['cons','loss','ph','pp','share'].forEach(id => $(id).addEventListener('input', renderEV));
+
+// Tarif minim pe km (formula validată în Etapa 3, src/domain/minRate.ts)
+function renderMin(){
+  const costKm = energyPerKm().perKm + EX.wearPerKm;
+  const want = num($('want').value), speed = num($('speed').value), dead = num($('dead').value)/100, c = Math.min(num($('mcomm').value),99.9)/100;
+  const v = speed>0 && dead<1 ? (costKm + want/speed)/((1-dead)*(1-c)) : NaN;
+  $('minKm').textContent = isFinite(v) ? `${fmt(v)} RON/km` : '—';
+  $('costKm').textContent = `${fmt(costKm,3)} RON/km`;
+}
+['want','speed','dead','mcomm'].forEach(id => $(id).addEventListener('input', renderMin));
+
+// Istoric (date fictive)
+const rides = [
+  ['21:12','bolt','Bolt',35.00,18.68,41.50,'go'],['20:31','uber','Uber',22.40,9.10,27.30,'stop'],
+  ['19:48','bolt','Bolt',28.90,13.20,36.00,'slow'],['19:02','uber','Uber',61.50,33.80,52.10,'go'],
+  ['18:20','bolt','Bolt',14.00,3.40,17.00,'stop']];
+const rides2 = [['22:40','uber','Uber',48.00,25.10,44.80,'go'],['21:55','bolt','Bolt',19.50,8.20,32.80,'slow']];
+const rideHtml = r => `<div class="ride"><span class="dot ${r[6]}" aria-label="${{go:'Merită',slow:'La limită',stop:'Nu merită'}[r[6]]}"></span>
+  <div><div class="t"><span class="tag">${r[2]}</span><span class="num">${fmt(r[3])} RON</span></div><div class="m num">${r[0]} · ${fmt(r[5])} RON/oră</div></div>
+  <div class="p"><b class="num">${fmt(r[4])}</b><span class="small muted">profit</span></div></div>`;
+$('rides').innerHTML = rides.map(rideHtml).join('');
+$('rides2').innerHTML = rides2.map(rideHtml).join('');
+
+// Grafic 7 zile (date fictive)
+(function(){
+  const d = [['V',410,205,40],['S',520,262,55],['D',300,140,20],['L',455,231,180],['Ma',380,190,35],['Mi',612,312,48],['J',512,285,62]];
+  const H = 104, max = 650, w = 310/7;
+  let s = '';
+  d.forEach(([lab,inc,pro,exp],i) => {
+    const x = i*w + 6, bw = (w-12)/3;
+    [[inc,'var(--muted)'],[pro,'var(--brand)'],[exp,'var(--stop)']].forEach(([v,col],j) => {
+      const h = v/max*H; s += `<rect x="${x+j*bw}" y="${H-h}" width="${bw-1.5}" height="${h}" rx="2" fill="${col}" opacity="${j===0?.45:1}"><title>${lab}: ${['Venit','Profit','Cheltuieli'][j]} ${fmt(v)} RON</title></rect>`;
+    });
+    s += `<text x="${x+(w-12)/2}" y="${H+20}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Barlow">${lab}</text>`;
+  });
+  $('chart').innerHTML = s;
+})();
+
+// Temă
+document.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => {
+  document.documentElement.dataset.theme = b.dataset.t;
+  document.querySelectorAll('[data-t]').forEach(x => x.setAttribute('aria-pressed', x===b));
+}));
+
+renderEV();
+</script>
+</body>
+</html>
