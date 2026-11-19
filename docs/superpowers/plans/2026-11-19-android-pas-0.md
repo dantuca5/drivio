@@ -34,8 +34,8 @@
 
 ### Task 2: Proiectul Android (Capacitor)
 **Files:** `capacitor.config.ts`, `android/**` (generat), `package.json`.
-- [ ] `npm i @capacitor/core @capacitor/android` și `npm i -D @capacitor/cli`; `npx cap init Drivio io.github.dantuca5.drivio --web-dir dist`; `npx cap add android`.
-- [ ] Lucrătorul offline (service worker) nu se înregistrează în aplicația nativă (`Capacitor.isNativePlatform()`).
+- [x] `npm i @capacitor/core @capacitor/android` și `npm i -D @capacitor/cli`; `npx cap init Drivio io.github.dantuca5.drivio --web-dir dist`; `npx cap add android`.
+- [x] Lucrătorul offline (service worker) nu se înregistrează în aplicația nativă (`Capacitor.isNativePlatform()`).
 
 ### Task 3: Serviciul de înregistrare (Kotlin)
 **Files:** `android/app/src/main/java/io/github/dantuca5/drivio/live/{ScreenNode.kt, Redactor.kt, CaptureStore.kt, DrivioAccessibilityService.kt, LiveReaderPlugin.kt}`, `res/xml/drivio_accessibility.xml`, `AndroidManifest.xml`, `MainActivity.kt`, `res/xml/file_paths.xml`, `app/build.gradle` (dependență JUnit), `src/test/.../RedactorTest.kt`.
@@ -44,17 +44,17 @@
 - `object Redactor { fun redact(s: String): String }`;
 - `CaptureStore(dir: File, maxBytes = 5_000_000)` cu `append(pkg, nodes)`, `stats()`, `files()`, `clear()`;
 - pluginul `LiveReader` cu `getStatus()`, `openAccessibilitySettings()`, `openAppDetails()`, `setCaptureEnabled({enabled})`, `shareCaptures()`, `clearCaptures()`.
-- [ ] JUnit: exemplele din Review Focus 1–3; telefon „0722 123 456” ascuns; „Strada Exemplu 33, Timișoara” ascuns.
+- [x] JUnit: exemplele din Review Focus 1–3; telefon „0722 123 456” ascuns; „Strada Exemplu 33, Timișoara” ascuns.
 
 ### Task 4: Secțiunea „Citire automată (Android)” în Setări (web)
 **Files:** `src/services/liveReader.ts` (punte tipizată spre plugin, cu variantă inactivă în afara Android), `src/ui/screens/SettingsScreen.tsx` (secțiune nouă), test jsdom cu puntea simulată.
-- [ ] Secțiunea apare doar pe Android. Arată starea serviciului, cei 3 pași de activare pentru Samsung (setări restricționate, accesibilitate, baterie), comutatorul de înregistrare, numărul de ecrane înregistrate, plus „Trimite” și „Șterge”.
+- [x] Secțiunea apare doar pe Android. Arată starea serviciului, cei 3 pași de activare pentru Samsung (setări restricționate, accesibilitate, baterie), comutatorul de înregistrare, numărul de ecrane înregistrate, plus „Trimite” și „Șterge”.
 
 ### Task 5: Compilarea pe GitHub
 **Files:** `.github/workflows/android.yml`.
-- [ ] Pe ramura `android` și pe `main`: Java 21, Node 24, `npm ci`, `npx tsc --noEmit`, `npx vitest run`, `npx vite build`, `npx cap sync android`, `./gradlew testDebugUnitTest assembleRelease`. APK-ul se semnează cu cheia din secretele `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`. Fără secrete se construiește doar o versiune de test (`assembleDebug`), marcată ca atare.
+- [x] Pe ramura `android` și pe `main`: Java 21, Node 24, `npm ci`, `npx tsc --noEmit`, `npx vitest run`, `npx vite build`, `npx cap sync android`, `./gradlew testDebugUnitTest assembleRelease`. APK-ul se semnează cu cheia din secretele `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`. Fără secrete se construiește doar o versiune de test (`assembleDebug`), marcată ca atare.
 - [ ] Pe `main`, APK-ul semnat se publică în GitHub Releases ca `drivio.apk`.
 
 ### Task 6: Verificare
-- [ ] Local: `npx tsc --noEmit`, `npx vitest run`, `npx playwright test` trec.
-- [ ] GitHub: rularea Android trece (inclusiv JUnit), iar APK-ul există.
+- [x] Local: `npx tsc --noEmit`, `npx vitest run`, `npx playwright test` trec.
+- [x] GitHub: rularea Android trece (inclusiv JUnit), iar APK-ul există.
