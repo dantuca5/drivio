@@ -67,7 +67,7 @@ export function Onboarding() {
             currency={CURRENCY}
             submitLabel="Gata, deschide aplicația"
             onSubmit={async (f) => {
-              await createSettings({ currency: CURRENCY, commissionPct: f.commissionPct, thresholds: f.thresholds }, vehicle.id);
+              await createSettings({ currency: CURRENCY, commissionPct: f.commissionPct, thresholds: f.thresholds, fareModeByPlatform: f.fareModeByPlatform }, vehicle.id);
               void requestPersistentStorage();
             }}
           />

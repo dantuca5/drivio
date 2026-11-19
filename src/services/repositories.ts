@@ -11,7 +11,7 @@ import {
   type RideInput,
 } from '../domain';
 import { db } from './db';
-import type { AppSettings, ExpenseEntity, FixedCostEntity, RideEntity, VehicleData, VehicleEntity } from './entities';
+import { DEFAULT_FARE_MODE_BY_PLATFORM, type AppSettings, type ExpenseEntity, type FixedCostEntity, type RideEntity, type VehicleData, type VehicleEntity } from './entities';
 
 /** Eroare de validare cu mesajele pentru utilizator, pe câmpuri. */
 export class ValidationError extends Error {
@@ -38,7 +38,7 @@ export async function getSettings(): Promise<AppSettings | undefined> {
   return db.settings.get('app');
 }
 
-export type InitialSettings = Pick<AppSettings, 'commissionPct' | 'thresholds' | 'currency'>;
+export type InitialSettings = Pick<AppSettings, 'commissionPct' | 'thresholds' | 'currency' | 'fareModeByPlatform'>;
 
 /** Creează setările la finalul ghidului de pornire. Valorile financiare vin de la utilizator. */
 export async function createSettings(initial: InitialSettings, activeVehicleId: string): Promise<AppSettings> {
@@ -53,6 +53,7 @@ export async function createSettings(initial: InitialSettings, activeVehicleId: 
     taxReservePct: 0,
     activeVehicleId,
     lastPlatform: 'uber',
+    fareModeByPlatform: { ...(initial.fareModeByPlatform ?? DEFAULT_FARE_MODE_BY_PLATFORM) },
     backupReminderDays: 7,
     lastBackupAt: null,
     createdAt: now,

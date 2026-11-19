@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { referenceEv, referenceRide, referenceThresholds, referenceWear } from '../../domain/__tests__/fixtures';
 import { DrivioDB, db, resetDatabaseForTests } from '../db';
 import { BackupError, createBackupJson, getRestorePoint, parseBackup, restoreBackup, undoLastRestore } from '../backup';
+import { offerFareMode } from '../entities';
 import { createSettings, saveExpense, saveFixedCost, saveRide, saveVehicle, softDeleteRide } from '../repositories';
 
 async function seed() {
@@ -37,6 +38,19 @@ describe('backup → restaurare', () => {
     expect(after.find((r) => r.note)?.note).toBe('Aeroport; „ș” și ț');
     expect((await db.fixedCosts.toArray())[0]?.activeFrom).toEqual(new Date(2026, 0, 1));
     expect((await db.settings.get('app'))?.commissionPct.uber).toBe(25);
+  });
+
+  it('un backup cu setări mai vechi (fără tipul sumei) se restaurează și pornește pe suma netă', async () => {
+    await seed();
+    const s = await db.settings.get('app');
+    delete s!.fareModeByPlatform;
+    await db.settings.put(s!);
+    const { json } = await createBackupJson();
+    await resetDatabaseForTests();
+    await restoreBackup(await parseBackup(json), 'replace');
+    const restored = await db.settings.get('app');
+    expect(restored?.fareModeByPlatform).toBeUndefined();
+    expect(offerFareMode(restored!, 'uber')).toBe('net');
   });
 
   it('respinge un fișier modificat (suma de control) fără să atingă datele', async () => {

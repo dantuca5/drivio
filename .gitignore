@@ -9,3 +9,7 @@ e2e/screenshots/
 .claude/
 *.log
 .DS_Store
+# cheia de semnare Android nu intră niciodată în repo
+*.p12
+*.jks
+*.keystore

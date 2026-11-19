@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Drivio</string>
+    <string name="title_activity_main">Drivio</string>
+    <string name="package_name">io.github.dantuca5.drivio</string>
+    <string name="custom_url_scheme">io.github.dantuca5.drivio</string>
+    <string name="live_service_label">Drivio – citire curse</string>
+    <string name="live_service_description">Citește ofertele de cursă din Uber Driver și Bolt Driver, ca Drivio să-ți arate dacă merită. Nu apasă nimic în locul tău și nu trimite nimic pe internet. În această versiune doar înregistrează ecranele acestor două aplicații, cu numele, adresele și telefoanele ascunse, ca să învățăm formatul ofertelor.</string>
+</resources>

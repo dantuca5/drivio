@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { buildCostSnapshot, PLATFORMS, type Platform } from '../../domain';
 import { emptyRideForm, liveCalculation, parseRideForm, rideInputToForm, type RideFormValues } from '../../features/rideForm';
 import { useVehicles } from '../../features/hooks';
-import type { AppSettings, RideEntity } from '../../services/entities';
+import { offerFareMode, type AppSettings, type RideEntity } from '../../services/entities';
 import { saveRide, softDeleteRide, restoreRide, ValidationError } from '../../services/repositories';
 import { NumberField, Segmented, SelectField, TextField } from '../components/controls';
 import { CalcDetails, VerdictCard } from '../components/RideResultViews';
@@ -32,11 +32,19 @@ export function RideSheet({ mode: initialMode, settings, ride, onClose }: Props)
   const [platform, setPlatform] = useState<Platform>(ride?.platform ?? settings.lastPlatform);
   const [vehicleId, setVehicleId] = useState<string>(ride?.vehicleId ?? settings.activeVehicleId ?? '');
   const [values, setValues] = useState<RideFormValues>(() =>
-    ride ? rideInputToForm(ride.input, ride.commissionOverridden ? ride.snapshot.commissionPct : undefined) : emptyRideForm,
+    ride
+      ? rideInputToForm(ride.input, ride.commissionOverridden ? ride.snapshot.commissionPct : undefined)
+      : { ...emptyRideForm, fareMode: offerFareMode(settings, settings.lastPlatform) },
   );
   const [startedAt, setStartedAt] = useState(() => toLocalInput(ride?.startedAt ?? new Date()));
   const [note, setNote] = useState(ride?.note ?? '');
   const [showMore, setShowMore] = useState(() => !!ride && (ride.input.waitMin > 0 || ride.input.tipMinor > 0 || ride.input.bonusMinor > 0 || ride.commissionOverridden || ride.input.energyCostOverrideMinor != null || !!ride.note));
+  // Dacă nu ai ales tu tipul sumei, el urmează platforma (cursă nouă sau simulare).
+  const fareModeChosen = useRef(!!ride);
+  const choosePlatform = (p: Platform) => {
+    setPlatform(p);
+    if (!fareModeChosen.current) setValues((s) => ({ ...s, fareMode: offerFareMode(settings, p) }));
+  };
   const [touched, setTouched] = useState<Set<keyof RideFormValues>>(new Set());
   const [submitted, setSubmitted] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -123,7 +131,7 @@ export function RideSheet({ mode: initialMode, settings, ride, onClose }: Props)
         <Segmented
           label="Platformă"
           value={platform}
-          onChange={setPlatform}
+          onChange={choosePlatform}
           options={PLATFORMS.map((p) => ({ value: p, label: PLATFORM_LABEL[p] }))}
         />
         {activeVehicles.length > 1 && (
@@ -156,7 +164,10 @@ export function RideSheet({ mode: initialMode, settings, ride, onClose }: Props)
               className="span-2"
               label="Tipul sumei"
               value={values.fareMode}
-              onChange={(m) => setValues((s) => ({ ...s, fareMode: m }))}
+              onChange={(m) => {
+                fareModeChosen.current = true;
+                setValues((s) => ({ ...s, fareMode: m }));
+              }}
               options={[
                 { value: 'gross', label: 'Sumă brută' },
                 { value: 'net', label: 'Sumă netă' },

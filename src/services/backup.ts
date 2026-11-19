@@ -148,6 +148,7 @@ const settingsSchema = z.object({
   taxReservePct: finite,
   activeVehicleId: z.union([z.null(), z.string()]),
   lastPlatform: platform,
+  fareModeByPlatform: z.object({ uber: z.enum(['gross', 'net']), bolt: z.enum(['gross', 'net']) }).optional(),
   backupReminderDays: z.number().int().min(1).max(365),
   lastBackupAt: nullableDate,
   ...timestamps,

@@ -24,6 +24,7 @@ async function setup() {
     { currency: 'RON', commissionPct: { uber: 25, bolt: 20 }, thresholds: referenceThresholds },
     vehicle.id,
   );
+  expect((await db.settings.get('app'))?.fareModeByPlatform).toEqual({ uber: 'net', bolt: 'net' });
   return vehicle;
 }
 

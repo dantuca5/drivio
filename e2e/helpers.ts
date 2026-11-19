@@ -15,8 +15,12 @@ export async function onboard(page: Page) {
   await expect(page.getByText('0,631 RON/km')).toBeVisible();
   await page.getByRole('button', { name: 'Continuă' }).tap();
 
-  await page.getByLabel('Uber').fill('25');
-  await page.getByLabel('Bolt').fill('25');
+  await page.getByLabel('Uber', { exact: true }).fill('25');
+  await page.getByLabel('Bolt', { exact: true }).fill('25');
+  // exemplul de referință folosește tariful brut
+  for (const p of ['Uber', 'Bolt']) {
+    await page.getByRole('group', { name: `Suma din oferta ${p}` }).getByRole('button', { name: 'Brută' }).tap();
+  }
   await page.getByLabel('Roșu sub').nth(0).fill('30');
   await page.getByLabel('Verde de la').nth(0).fill('40');
   await page.getByLabel('Roșu sub').nth(1).fill('1');

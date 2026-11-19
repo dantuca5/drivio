@@ -31,6 +31,10 @@ async function completeOnboarding(user: ReturnType<typeof userEvent.setup>) {
   await user.type(green[0]!, '40');
   await user.type(red[1]!, '1');
   await user.type(green[1]!, '1,2');
+  // testele folosesc tariful brut, ca exemplul de referință
+  for (const p of ['Uber', 'Bolt']) {
+    await user.click(within(screen.getByRole('group', { name: `Suma din oferta ${p}` })).getByRole('button', { name: 'Brută' }));
+  }
   await user.click(screen.getByRole('button', { name: 'Gata, deschide aplicația' }));
   await screen.findByRole('heading', { name: 'Acasă' });
 }

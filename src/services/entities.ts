@@ -2,6 +2,7 @@ import type { z } from 'zod';
 import type {
   CostSnapshot,
   ExpenseCategory,
+  FareMode,
   Goals,
   Minor,
   Platform,
@@ -87,9 +88,21 @@ export interface AppSettings {
   taxReservePct: number;
   activeVehicleId: string | null;
   lastPlatform: Platform;
+  /**
+   * Ce sumă arată oferta fiecărei platforme. Uber și Bolt afișează azi suma netă,
+   * deci lipsa valorii (setări mai vechi) înseamnă „net”.
+   */
+  fareModeByPlatform?: Record<Platform, FareMode>;
   /** după câte zile fără backup apare mementoul */
   backupReminderDays: number;
   lastBackupAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export const DEFAULT_FARE_MODE_BY_PLATFORM: Readonly<Record<Platform, FareMode>> = { uber: 'net', bolt: 'net' };
+
+/** Tipul sumei cu care pornește o cursă nouă pe platforma dată. */
+export function offerFareMode(settings: Pick<AppSettings, 'fareModeByPlatform'>, platform: Platform): FareMode {
+  return settings.fareModeByPlatform?.[platform] ?? DEFAULT_FARE_MODE_BY_PLATFORM[platform];
 }

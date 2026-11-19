@@ -8,6 +8,7 @@ Calculator de profitabilitate pentru șoferii Uber și Bolt din România. Arată
 - Datele rămân doar pe telefon; backup și restaurare prin fișier.
 - Temă întunecată și luminoasă, export PDF și CSV, obiective, cheltuieli, costuri fixe.
 - Toate cifrele sunt **estimări operaționale**, nu profit contabil sau fiscal.
+- **Android (în lucru):** aplicație APK care citește singură ofertele Uber și Bolt. Instalare: [docs/ANDROID.md](docs/ANDROID.md).
 
 ## Pentru dezvoltare
 
@@ -20,7 +21,7 @@ Calculator de profitabilitate pentru șoferii Uber și Bolt din România. Arată
 | `npm run e2e` | Testele cap-coadă în WebKit, profil iPhone 13 Pro (Playwright) |
 | `npm run build` | Build-ul de producție, cu lucrătorul offline |
 
-Fiecare modificare pe ramura `main` e testată și publicată automat pe GitHub Pages ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)).
+Fiecare modificare pe ramura `main` e testată și publicată automat pe GitHub Pages ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)). APK-ul Android se compilează și se testează (inclusiv testele Kotlin) în [.github/workflows/android.yml](.github/workflows/android.yml); proiectul nativ e în [android](android) (Capacitor + Kotlin).
 
 ## Structură
 

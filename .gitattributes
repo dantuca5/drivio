@@ -4,3 +4,6 @@
 *.ttf binary
 *.woff binary
 *.woff2 binary
+*.jar binary
+*.bat text eol=crlf
+*.p12 binary

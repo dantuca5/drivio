@@ -1,0 +1,92 @@
+# APK-ul Android: teste (web + Kotlin), compilare și, dacă există cheia de semnare, publicare în Releases.
+# Cheia vine din secretele depozitului: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS.
+name: Android
+
+on:
+  push:
+    branches: [main, android]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - run: npm ci
+      - name: Verificare tipuri
+        run: npx tsc --noEmit
+      - name: Teste web
+        run: npx vitest run
+      - name: Build web (aplicația din APK stă la rădăcină)
+        run: npx vite build
+      - name: Copiere în proiectul Android
+        run: npx cap sync android
+
+      - name: Cheia de semnare
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/drivio.p12"
+            echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/drivio.p12" >> "$GITHUB_ENV"
+            echo "SIGNED=1" >> "$GITHUB_ENV"
+          else
+            echo "::warning::Lipsește cheia de semnare: se construiește doar o versiune de test, nesemnată pentru publicare."
+          fi
+
+      - name: Teste Kotlin și APK
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          chmod +x gradlew
+          if [ "$SIGNED" = "1" ]; then
+            ./gradlew --no-daemon testDebugUnitTest assembleRelease
+            cp app/build/outputs/apk/release/app-release.apk ../drivio.apk
+          else
+            ./gradlew --no-daemon testDebugUnitTest assembleDebug
+            cp app/build/outputs/apk/debug/app-debug.apk ../drivio-test.apk
+          fi
+
+      - name: Rezultatele testelor Kotlin
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: teste-kotlin
+          path: android/app/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: APK (artefact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: drivio-apk
+          path: drivio*.apk
+
+      - name: Publicare în Releases
+        if: env.SIGNED == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="android-0.1.${{ github.run_number }}"
+          if [ "${{ github.ref_name }}" = "main" ]; then flag=""; else flag="--prerelease"; fi
+          gh release create "$tag" drivio.apk $flag \
+            --target "${{ github.sha }}" \
+            --title "Drivio Android 0.1.${{ github.run_number }}" \
+            --notes "Instalare: deschide pagina de pe telefon, descarcă drivio.apk și urmează docs/ANDROID.md. Ramura: ${{ github.ref_name }}."

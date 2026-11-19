@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { commissionPctSchema, parseDecimal, thresholdsSchema, type Platform, type Thresholds } from '../../domain';
-import { NumberField } from '../components/controls';
+import { commissionPctSchema, parseDecimal, PLATFORMS, thresholdsSchema, type FareMode, type Platform, type Thresholds } from '../../domain';
+import { DEFAULT_FARE_MODE_BY_PLATFORM } from '../../services/entities';
+import { NumberField, Segmented } from '../components/controls';
+import { PLATFORM_LABEL } from '../text';
 import { toField } from '../format';
 
 export interface FinancialValues {
   commissionPct: Record<Platform, number>;
   thresholds: Thresholds;
+  fareModeByPlatform?: Record<Platform, FareMode>;
 }
 
 interface Props {
@@ -27,6 +30,7 @@ export function FinancialForm({ initial, currency, submitLabel, onSubmit }: Prop
     redBelowPerKm: toField(initial?.thresholds.redBelowPerKm),
     greenFromPerKm: toField(initial?.thresholds.greenFromPerKm),
   });
+  const [fareModes, setFareModes] = useState<Record<Platform, FareMode>>(() => ({ ...DEFAULT_FARE_MODE_BY_PLATFORM, ...initial?.fareModeByPlatform }));
   const [errors, setErrors] = useState<Partial<Record<Key, string>>>({});
   const [busy, setBusy] = useState(false);
 
@@ -73,7 +77,7 @@ export function FinancialForm({ initial, currency, submitLabel, onSubmit }: Prop
     }
     setBusy(true);
     try {
-      await onSubmit({ commissionPct: { uber: uber!, bolt: bolt! }, thresholds: parsed.data });
+      await onSubmit({ commissionPct: { uber: uber!, bolt: bolt! }, thresholds: parsed.data, fareModeByPlatform: fareModes });
     } finally {
       setBusy(false);
     }
@@ -94,6 +98,23 @@ export function FinancialForm({ initial, currency, submitLabel, onSubmit }: Prop
         <NumberField label="Uber" unit="%" value={v.uber} onChange={set('uber')} error={errors.uber} />
         <NumberField label="Bolt" unit="%" value={v.bolt} onChange={set('bolt')} error={errors.bolt} />
       </div>
+
+      <p className="section-label">Ce sumă arată oferta</p>
+      <p className="small muted">Uber și Bolt arată de obicei suma netă, după comision. Cu ea pornește fiecare cursă nouă.</p>
+      {PLATFORMS.map((p) => (
+        <div key={p} className="row" style={{ justifyContent: 'space-between', gap: 12 }}>
+          <span>{PLATFORM_LABEL[p]}</span>
+          <Segmented
+            label={`Suma din oferta ${PLATFORM_LABEL[p]}`}
+            value={fareModes[p]}
+            onChange={(m) => setFareModes((s) => ({ ...s, [p]: m }))}
+            options={[
+              { value: 'net', label: 'Netă' },
+              { value: 'gross', label: 'Brută' },
+            ]}
+          />
+        </div>
+      ))}
 
       <p className="section-label">Când e o cursă bună</p>
       <p className="small muted">

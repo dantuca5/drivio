@@ -1,10 +1,17 @@
+import { fileToBase64, isNativeApp, LiveReader } from './liveReader';
+
 export type ShareOutcome = 'shared' | 'downloaded' | 'cancelled';
 
 /**
- * Salvează un fișier: pe iPhone prin foaia de partajare (Salvează în Fișiere, AirDrop, e-mail),
+ * Salvează un fișier: în aplicația Android prin foaia de partajare a sistemului; pe iPhone prin foaia de partajare (Salvează în Fișiere, AirDrop, e-mail),
  * altfel ca descărcare. Trebuie apelată direct dintr-o apăsare de buton (iOS cere asta).
  */
 export async function shareOrDownload(file: File): Promise<ShareOutcome> {
+  if (isNativeApp()) {
+    // în aplicația Android, WebView-ul nu are foaia de partajare: o deschide pluginul nativ
+    await LiveReader.shareFile({ name: file.name, mime: file.type || 'application/octet-stream', data: await fileToBase64(file) });
+    return 'shared';
+  }
   const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
   if (nav.share && nav.canShare?.({ files: [file] })) {
     try {

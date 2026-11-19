@@ -9,6 +9,7 @@ import type { DataSheetKind } from './screens/SettingsScreen';
 import { Icon, type IconName } from './components/Icon';
 import { ToastProvider } from './components/Toast';
 import { UpdatePrompt } from './components/UpdatePrompt';
+import { isNativeApp } from '../services/liveReader';
 import { HistoryScreen } from './screens/HistoryScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { Onboarding } from './screens/Onboarding';
@@ -33,7 +34,7 @@ export function App() {
   return (
     <ToastProvider>
       <div className="status-band" aria-hidden="true" />
-      {import.meta.env.PROD && <UpdatePrompt />}
+      {import.meta.env.PROD && !isNativeApp() && <UpdatePrompt />}
       {settings === null ? <Onboarding /> : <Shell settings={settings} />}
     </ToastProvider>
   );

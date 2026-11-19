@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drivio – panoul peste Uber și Bolt</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  /* Schiță: panoul Drivio deasupra ofertelor Uber/Bolt pe Samsung S24 FE. Date inventate; cifrele sunt calculate cu formulele Drivio
+     și costurile din exemplul de test (0,2312 lei/km energie + 0,40 lei/km uzură), praguri 30/40 lei/oră și 1,00/1,40 lei/km. */
+  :root { --go:#2BC48A; --slow:#F5B82E; --stop:#F0525A; --none:#2C3847; --ink:#0E141B; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:#0A0E13; font-family:Barlow, system-ui, sans-serif; color:#E9EEF4; padding:28px 20px 40px; }
+  h1 { font-size:26px; font-weight:700; max-width:1760px; margin:0 auto 6px; }
+  .lead { color:#8A97A8; max-width:1760px; margin:0 auto 24px; font-size:15px; }
+  .stage { display:flex; gap:28px; justify-content:center; flex-wrap:wrap; max-width:1760px; margin:0 auto; }
+  figure { width:412px; display:flex; flex-direction:column; gap:12px; }
+  figcaption { color:#8A97A8; font-size:14px; line-height:1.4; }
+  figcaption b { color:#E9EEF4; }
+  .phone { width:412px; height:880px; border-radius:40px; background:#000; padding:8px; }
+  .screen { position:relative; height:100%; border-radius:33px; overflow:hidden;
+    background:
+      linear-gradient(115deg, transparent 47%, #3b4656 47.3%, #3b4656 48.6%, transparent 49%),
+      linear-gradient(35deg, transparent 60%, #333e4c 60.3%, #333e4c 61.2%, transparent 61.5%),
+      linear-gradient(170deg, transparent 30%, #2f3946 30.2%, #2f3946 31%, transparent 31.2%),
+      #222a35; }
+  .cam { position:absolute; top:12px; left:50%; width:12px; height:12px; margin-left:-6px; border-radius:50%; background:#000; z-index:5; }
+  .status { position:absolute; top:0; left:0; right:0; height:36px; display:flex; justify-content:space-between; align-items:center; padding:0 22px; font-size:13px; font-weight:600; color:#fff; }
+  .num { font-family:"Barlow Semi Condensed", Barlow, sans-serif; font-variant-numeric:tabular-nums; }
+
+  /* ---- Panoul Drivio ---- */
+  .panel { position:absolute; top:42px; left:10px; right:10px; border-radius:22px; padding:12px 14px 12px; color:var(--ink);
+    box-shadow:0 10px 30px -10px rgba(0,0,0,.6); z-index:4; }
+  .panel[data-v=go] { background:var(--go); }
+  .panel[data-v=slow] { background:var(--slow); }
+  .panel[data-v=stop] { background:var(--stop); }
+  .panel[data-v=none] { background:var(--none); color:#E9EEF4; }
+  .p-top { display:flex; align-items:center; gap:8px; }
+  .chip { background:var(--ink); color:#fff; font-weight:700; font-size:15px; padding:4px 10px; border-radius:9px; }
+  .panel[data-v=none] .chip { background:#8A97A8; color:#0E141B; }
+  .plat { font-weight:600; font-size:15px; opacity:.85; }
+  .fare { margin-left:auto; font-weight:700; font-size:22px; }
+  .fare small { font-size:13px; font-weight:600; opacity:.8; }
+  .tiles { display:grid; grid-template-columns:1.25fr 1fr 1fr; gap:8px; margin-top:10px; }
+  .tile { background:rgba(14,20,27,.13); border-radius:13px; padding:7px 10px; }
+  .panel[data-v=none] .tile { background:rgba(255,255,255,.06); }
+  .tile b { display:block; font-size:28px; line-height:1.05; font-weight:700; }
+  .tile.main b { font-size:32px; }
+  .tile span { font-size:12px; font-weight:600; opacity:.8; }
+  .route { display:flex; justify-content:space-between; font-size:13.5px; font-weight:600; margin-top:9px; }
+  .why { font-size:13px; font-weight:500; margin-top:4px; }
+  .grip { position:absolute; top:6px; left:50%; width:34px; height:4px; margin-left:-17px; border-radius:2px; background:rgba(14,20,27,.25); }
+  .panel[data-v=none] .grip { background:rgba(255,255,255,.2); }
+
+  /* ---- Aplicația platformei (schematic, doar ca context) ---- */
+  .offer { position:absolute; left:12px; right:12px; bottom:18px; border-radius:22px; padding:16px; background:#16191d; border:1px solid #2b3036; }
+  .offer.bolt { border:2px solid #E8B436; }
+  .tag { display:inline-block; font-size:14px; font-weight:600; padding:4px 10px; border-radius:8px; background:#e9ecef; color:#111; margin-right:6px; }
+  .tag.blue { background:#183052; color:#7fa7f0; }
+  .tag.dark { background:#2a2e33; color:#fff; }
+  .big { font-size:42px; font-weight:700; letter-spacing:-.02em; margin:8px 0 6px; color:#fff; }
+  .big small { font-size:17px; font-weight:500; letter-spacing:0; }
+  .meta { color:#b8bec6; font-size:14px; line-height:1.55; }
+  .meta strong { color:#fff; font-weight:600; font-size:16px; display:block; margin-top:6px; }
+  .btn { margin-top:14px; height:50px; border-radius:12px; display:grid; place-items:center; font-weight:600; font-size:17px; color:#fff; }
+  .btn.uber { background:#2f5fb3; } .btn.bolt { background:#1f7a4c; border-radius:26px; }
+  .placeholder { color:#8a929b; font-style:italic; }
+
+  .toast { position:absolute; top:236px; left:22px; right:22px; background:#E9EEF4; color:#121820; border-radius:14px; padding:10px 14px; font-weight:600; font-size:14px; display:flex; justify-content:space-between; z-index:4; }
+  .toast u { text-decoration:none; color:#1F5BE0; }
+  .legend { max-width:1760px; margin:28px auto 0; color:#8A97A8; font-size:14px; line-height:1.6; }
+  .legend b { color:#E9EEF4; }
+</style>
+</head>
+<body>
+  <h1>Drivio pe Android: panoul cu verdictul peste ofertă</h1>
+  <p class="lead">Schiță, Samsung S24 FE. Panoul apare sus când Uber sau Bolt afișează o ofertă și dispare odată cu ea; butoanele platformei, de jos, rămân libere. Pasagerii și adresele sunt inventate.</p>
+
+  <div class="stage">
+    <!-- 1. Uber, merită -->
+    <figure>
+      <div class="phone"><div class="screen">
+        <div class="cam"></div><div class="status"><span>00:01</span><span>5G · 82%</span></div>
+        <div class="panel" data-v="go"><div class="grip"></div>
+          <div class="p-top"><span class="chip">Merită</span><span class="plat">Uber · Comfort</span><span class="fare num">47,06 <small>lei net</small></span></div>
+          <div class="tiles">
+            <div class="tile main"><b class="num">71,64</b><span>profit lei / oră</span></div>
+            <div class="tile"><b class="num">1,55</b><span>profit lei / km</span></div>
+            <div class="tile"><b class="num">33,43</b><span>profit lei</span></div>
+          </div>
+          <div class="route num"><span>○ client 17,5 km · 22 min</span><span>● cursă 4,1 km · 6 min</span></div>
+          <div class="why">Peste țintele de 40 lei/oră și 1,40 lei/km.</div>
+        </div>
+        <div class="offer">
+          <span class="tag">Comfort</span><span class="tag blue">Exclusive</span>
+          <div class="big">RON47.06</div>
+          <span class="tag dark">Cash payment</span><span class="tag dark">Net of service fee</span>
+          <div class="meta"><strong>22 mins (17.5 km) away</strong><span class="placeholder">Strada Exemplu 1, Localitate</span><strong>6 mins (4.1 km) trip</strong><span class="placeholder">Strada Exemplu 2, Localitate</span></div>
+          <div class="btn uber">Confirm</div>
+        </div>
+      </div></div>
+      <figcaption><b>Uber – Merită.</b> Ofertă lungă până la client (17,5 km), dar suma o acoperă: după energie și uzură rămân 33,43 lei, adică 71,64 lei pe oră.</figcaption>
+    </figure>
+
+    <!-- 2. Bolt, la limită, ofertă în timpul cursei -->
+    <figure>
+      <div class="phone"><div class="screen">
+        <div class="cam"></div><div class="status"><span>21:14</span><span>5G · 64%</span></div>
+        <div class="panel" data-v="slow"><div class="grip"></div>
+          <div class="p-top"><span class="chip">La limită</span><span class="plat">Bolt · următoarea</span><span class="fare num">12,80 <small>lei net</small></span></div>
+          <div class="tiles">
+            <div class="tile main"><b class="num">33,56</b><span>profit lei / oră</span></div>
+            <div class="tile"><b class="num">1,47</b><span>profit lei / km</span></div>
+            <div class="tile"><b class="num">8,95</b><span>profit lei</span></div>
+          </div>
+          <div class="route num"><span>○ client 2,9 km · 7 min</span><span>● cursă 3,2 km · 9 min</span></div>
+          <div class="why">Profitabilă, dar sub ținta de 40 lei/oră.</div>
+        </div>
+        <div class="offer bolt">
+          <span class="tag dark">Premium</span>
+          <div class="big">lei 12.80 <small>(NET, tax included)</small></div>
+          <div class="meta">Declining won't affect acceptance rate<strong>Current dropoff</strong><strong>7 min • 2.9 km</strong><span class="placeholder">Strada Exemplu 3, Timișoara</span><strong>9 min • 3.2 km</strong><span class="placeholder">Strada Exemplu 4, Timișoara</span></div>
+          <div class="btn bolt">Accept next ride</div>
+        </div>
+      </div></div>
+      <figcaption><b>Bolt – La limită.</b> Ofertă primită înainte să termini cursa curentă („Accept next ride”). Aduce profit, dar sub ținta ta pe oră.</figcaption>
+    </figure>
+
+    <!-- 3. Uber, nu merită -->
+    <figure>
+      <div class="phone"><div class="screen">
+        <div class="cam"></div><div class="status"><span>18:42</span><span>5G · 47%</span></div>
+        <div class="panel" data-v="stop"><div class="grip"></div>
+          <div class="p-top"><span class="chip">Nu merită</span><span class="plat">Uber · UberX</span><span class="fare num">18,20 <small>lei net</small></span></div>
+          <div class="tiles">
+            <div class="tile main"><b class="num">26,75</b><span>profit lei / oră</span></div>
+            <div class="tile"><b class="num">0,74</b><span>profit lei / km</span></div>
+            <div class="tile"><b class="num">9,81</b><span>profit lei</span></div>
+          </div>
+          <div class="route num"><span>○ client 9,8 km · 14 min</span><span>● cursă 3,5 km · 8 min</span></div>
+          <div class="why">Sub 30 lei/oră și sub 1,00 lei/km.</div>
+        </div>
+        <div class="offer">
+          <span class="tag">UberX</span>
+          <div class="big">RON18.20</div>
+          <span class="tag dark">Card payment</span><span class="tag dark">Net of service fee</span>
+          <div class="meta"><strong>14 mins (9.8 km) away</strong><span class="placeholder">Strada Exemplu 5, Localitate</span><strong>8 mins (3.5 km) trip</strong><span class="placeholder">Strada Exemplu 6, Localitate</span></div>
+          <div class="btn uber">Confirm</div>
+        </div>
+      </div></div>
+      <figcaption><b>Uber – Nu merită.</b> Drum gol lung pentru o cursă scurtă: 9,8 km până la client, 3,5 km cu client.</figcaption>
+    </figure>
+
+    <!-- 4. Ofertă necitită + salvare automată -->
+    <figure>
+      <div class="phone"><div class="screen">
+        <div class="cam"></div><div class="status"><span>19:05</span><span>5G · 40%</span></div>
+        <div class="panel" data-v="none"><div class="grip"></div>
+          <div class="p-top"><span class="chip">Ofertă necitită</span><span class="plat">Bolt</span><span class="fare num">— </span></div>
+          <div class="why" style="margin-top:10px; font-size:14px;">Nu am putut citi distanța sau durata cursei. Decide singur; cursa nu se salvează automat.</div>
+        </div>
+        <div class="toast" style="top:150px"><span>✓ Cursă Uber salvată automat · estimată</span><u>Anulează</u></div>
+        <div class="offer bolt">
+          <span class="tag dark">Comfort</span>
+          <div class="big">lei 21.10 <small>(NET, tax included)</small></div>
+          <div class="meta">Declining won't affect acceptance rate<strong>5 min • 1.8 km</strong><span class="placeholder">Strada Exemplu 7, Timișoara</span><strong>…</strong></div>
+          <div class="btn bolt">Accept</div>
+        </div>
+      </div></div>
+      <figcaption><b>Siguranță.</b> Panoul gri spune clar când lipsesc date, nu inventează un verdict. Sus: confirmarea discretă a unei curse salvate automat, cu „Anulează”.</figcaption>
+    </figure>
+  </div>
+
+  <p class="legend">
+    <b>Ce arată panoul:</b> verdictul (culoare + cuvânt), platforma și suma ofertei; <b>profitul</b> pe oră (mare), pe km și total, după energie și uzură; distanța și timpul până la client și ale cursei; motivul verdictului.
+    <b>Se poate muta</b> trăgând de bara de sus și își ține minte poziția. Nu acoperă și nu apasă niciodată butoanele Uber/Bolt.
+  </p>
+</body>
+</html>

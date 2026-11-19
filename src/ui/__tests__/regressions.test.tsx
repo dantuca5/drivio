@@ -10,7 +10,7 @@ import { App } from '../App';
 beforeEach(async () => {
   await resetDatabaseForTests();
   const v = await saveVehicle({ name: 'Tesla', ...referenceEv, ...referenceWear });
-  await createSettings({ currency: 'RON', commissionPct: { uber: 25, bolt: 25 }, thresholds: referenceThresholds }, v.id);
+  await createSettings({ currency: 'RON', commissionPct: { uber: 25, bolt: 25 }, thresholds: referenceThresholds, fareModeByPlatform: { uber: 'gross', bolt: 'gross' } }, v.id);
 });
 afterEach(() => cleanup());
 

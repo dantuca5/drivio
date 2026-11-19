@@ -11,7 +11,7 @@ import { App } from '../App';
 beforeEach(async () => {
   await resetDatabaseForTests();
   const v = await saveVehicle({ name: 'Tesla', ...referenceEv, ...referenceWear });
-  await createSettings({ currency: 'RON', commissionPct: { uber: 25, bolt: 25 }, thresholds: referenceThresholds }, v.id);
+  await createSettings({ currency: 'RON', commissionPct: { uber: 25, bolt: 25 }, thresholds: referenceThresholds, fareModeByPlatform: { uber: 'gross', bolt: 'gross' } }, v.id);
   const today = new Date();
   await saveRide({ startedAt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 30), platform: 'bolt', vehicleId: v.id, input: referenceRide, note: 'Aeroport Otopeni' });
   await saveRide({ startedAt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 10), platform: 'uber', vehicleId: v.id, input: { ...referenceRide, fareMinor: 1500, pickupKm: 4 } });

@@ -14,6 +14,8 @@ import { Sheet } from '../components/Sheet';
 import { useToast } from '../components/Toast';
 import { FinancialForm } from '../forms/FinancialForm';
 import { VehicleForm } from '../forms/VehicleForm';
+import { isAndroidApp } from '../../services/liveReader';
+import { LiveReaderSection } from './LiveReaderSection';
 import { money, perKm } from '../format';
 import { POWERTRAIN_LABEL } from '../text';
 
@@ -149,6 +151,8 @@ export function SettingsScreen({ settings, onOpenData }: { settings: AppSettings
         )}
       </div>
 
+      {isAndroidApp() && <LiveReaderSection />}
+
       <p className="section-label">Aspect</p>
       <div className="stack">
         <Segmented<ThemePreference>
@@ -224,11 +228,11 @@ export function SettingsScreen({ settings, onOpenData }: { settings: AppSettings
       {financialOpen && (
         <Sheet title="Comisioane și praguri" onClose={() => setFinancialOpen(false)}>
           <FinancialForm
-            initial={{ commissionPct: settings.commissionPct, thresholds: settings.thresholds }}
+            initial={{ commissionPct: settings.commissionPct, thresholds: settings.thresholds, fareModeByPlatform: settings.fareModeByPlatform }}
             currency={c}
             submitLabel="Salvează"
             onSubmit={async (f) => {
-              await updateSettings({ commissionPct: f.commissionPct, thresholds: f.thresholds });
+              await updateSettings({ commissionPct: f.commissionPct, thresholds: f.thresholds, fareModeByPlatform: f.fareModeByPlatform });
               toast('Setări salvate');
               setFinancialOpen(false);
             }}

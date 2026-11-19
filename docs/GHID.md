@@ -82,11 +82,11 @@ Toate valorile se pot schimba oricând din **Setări**.
 4. Cât tastezi, câmpul colorat îți arată verdictul, profitul pe oră și pe km.
 5. Apasă **Salvează cursa** sau tasta **Enter**. Ai 5 secunde să apeși **Anulează**, dacă ai greșit.
 
-### ⚠️ Sumă brută sau netă: important la Uber
+### ⚠️ Sumă brută sau netă
 
-- **Uber** afișează în ofertă suma **după comision** („Net of service fee”). Pentru cursele Uber deschide **„Mai mult”** și alege **„Sumă netă”**, apoi introdu suma exact cum apare.
-- Dacă lași „Sumă brută” la o sumă netă, aplicația scade comisionul **încă o dată** și profitul iese mai mic decât în realitate.
-- La **Bolt**, verifică în aplicația de șofer dacă suma afișată e înainte sau după comision și alege la fel.
+- **Uber** („Net of service fee”) și **Bolt** („NET, tax included”) afișează în ofertă suma **după comision**. De aceea o cursă nouă pornește pe **„Sumă primită (după comision)”**: introdu suma exact cum apare în ofertă.
+- Dacă platforma ta arată altfel, schimbi în **Setări → Comisioane și praguri → Ce sumă arată oferta**, separat pentru Uber și Bolt. Pentru o singură cursă: **„Mai mult” → Tipul sumei**.
+- Dacă ai alege „Sumă brută” la o sumă netă, aplicația ar scădea comisionul **încă o dată** și profitul ar ieși mai mic decât în realitate.
 
 ### „Mai mult”: câmpuri opționale
 
@@ -195,7 +195,7 @@ Când apare o versiune nouă, în partea de sus apare **„Versiune nouă dispon
 |---|---|
 | Nu găsesc „Adaugă pe ecranul principal” | Folosești Safari? În meniul Partajează, derulează în jos; pe unele versiuni de iOS e sub „Editează acțiunile”. |
 | Aplicația s-a deschis în Safari, cu bara de adrese | Ai deschis linkul, nu icoana. Deschide Drivio de pe ecranul principal. |
-| Profitul la Uber pare prea mic | Probabil ai lăsat „Sumă brută” la o sumă netă. Editează cursa → Mai mult → „Sumă netă”. |
+| Profitul la Uber sau Bolt pare prea mic | Probabil cursa e pe „Sumă brută”, dar ai introdus suma netă din ofertă. Editează cursa → Mai mult → „Sumă netă”. |
 | Energia estimată diferă mult de bonuri | Corectează consumul și prețurile din Setări → vehiculul tău. Se aplică doar curselor noi; pentru cele vechi, editează cursa și bifează „Recalculează”. |
 | Datele au dispărut | Restaurează ultimul backup (secțiunea 7). Fă backup săptămânal ca să nu pierzi mai mult de câteva zile. |
 | Am schimbat moneda și sumele nu s-au convertit | Așa e gândit: moneda schimbă doar afișarea, nu convertește sume. |
